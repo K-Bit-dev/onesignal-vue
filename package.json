@@ -1,6 +1,6 @@
 {
   "name": "onesignal-vue-3",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "A fork of the official onesignal-vue package that works for vue3.",
   "author": "rgomezp",
   "contributors": [{ "name": "Rodrigo Gomez-Palacio, Xander ten Boden" }],
