@@ -1,4 +1,4 @@
-# onesignal-vue
+# onesignal-vue-3
 Vue OneSignal Plugin: Make it easy to integrate OneSignal with your Vue App!
 
 This is a JavaScript module that can be used to easily include [OneSignal](https://onesignal.com/) code in a website or app that uses Vue for its front-end codebase.

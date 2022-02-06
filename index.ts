@@ -878,7 +878,7 @@ const OneSignalVue: IOneSignal = {
 
 const OneSignalVuePlugin = {
   install(app: typeof VueApp) {
-    app.prototype.$OneSignal = OneSignalVue as IOneSignal;
+    app.config.globalProperties.$OneSignal = OneSignalVue as IOneSignal;
   }
 }
 

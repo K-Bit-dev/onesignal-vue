@@ -1,11 +1,11 @@
 {
-  "name": "onesignal-vue",
+  "name": "onesignal-vue-3",
   "version": "1.0.0-beta3",
-  "description": "Vue OneSignal Plugin: Make it easy to integrate OneSignal with your Vue App!",
+  "description": "A fork of the official onesignal-vue package that works for vue3.",
   "author": "rgomezp",
-  "contributors": [{ "name": "Rodrigo Gomez-Palacio" }],
+  "contributors": [{ "name": "Rodrigo Gomez-Palacio, Xander ten Boden" }],
   "license": "MIT",
-  "repository": "OneSignal/onesignal-vue",
+  "repository": "k-bit-dev/onesignal-vue-3",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
@@ -62,6 +62,8 @@
     "push",
     "notification",
     "push notification",
-    "vue"
+    "vue",
+    "vue3",
+    "vue 3"
   ]
 }
