@@ -1,6 +1,6 @@
 {
   "name": "onesignal-vue-3",
-  "version": "1.0.0-beta3",
+  "version": "1.0.1",
   "description": "A fork of the official onesignal-vue package that works for vue3.",
   "author": "rgomezp",
   "contributors": [{ "name": "Rodrigo Gomez-Palacio, Xander ten Boden" }],
@@ -55,7 +55,7 @@
     "rollup-plugin-typescript2": "^0.17.0",
     "rollup-plugin-url": "^2.1.0",
     "typescript": "^3.7.5",
-    "vue": "^2.6.14"
+    "vue": "^3.0.0"
   },
   "keywords": [
     "onesignal",
