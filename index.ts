@@ -1,4 +1,4 @@
-import Vue from 'vue';
+const Vue = require('vue')
 
 const ONESIGNAL_SDK_ID = 'onesignal-sdk';
 const ONE_SIGNAL_SCRIPT_SRC = 'https://cdn.onesignal.com/sdks/OneSignalSDK.js';
@@ -47,12 +47,6 @@ const setupOneSignalIfMissing = () => {
 }
 
 /* T Y P E   D E C L A R A T I O N S */
-
-declare module 'vue/types/vue' {
-  interface Vue {
-    $OneSignal: IOneSignal;
-  }
-}
 
 declare global {
   interface Window {
@@ -167,720 +161,724 @@ function init(options: IInitObject) {
   });
 }
 
-  function on(event, listener): void {
+function on(event, listener): void {
+  if (!doesOneSignalExist()) {
+    vueOneSignalFunctionQueue.push({
+      name: "on",
+      args: arguments,
+    });
+    return;
+  }
+
+  window.OneSignal.push(() => {
+    window.OneSignal.on(event, listener)
+  });
+};
+
+function off(event, listener): void {
+  if (!doesOneSignalExist()) {
+    vueOneSignalFunctionQueue.push({
+      name: "off",
+      args: arguments,
+    });
+    return;
+  }
+
+  window.OneSignal.push(() => {
+    window.OneSignal.off(event, listener)
+  });
+};
+
+function once(event, listener): void {
+  if (!doesOneSignalExist()) {
+    vueOneSignalFunctionQueue.push({
+      name: "once",
+      args: arguments,
+    });
+    return;
+  }
+
+  window.OneSignal.push(() => {
+    window.OneSignal.once(event, listener)
+  });
+};
+
+function isPushNotificationsEnabled(callback): Promise<boolean> {
+  return new Promise(function (resolve, reject) {
     if (!doesOneSignalExist()) {
       vueOneSignalFunctionQueue.push({
-        name: "on",
+        name: "isPushNotificationsEnabled",
         args: arguments,
+        promiseResolver: resolve,
       });
       return;
     }
 
     window.OneSignal.push(() => {
-      window.OneSignal.on(event, listener)
+      window.OneSignal.isPushNotificationsEnabled(callback)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function off(event, listener): void {
+function showHttpPrompt(options): Promise<void> {
+  return new Promise(function (resolve, reject) {
     if (!doesOneSignalExist()) {
       vueOneSignalFunctionQueue.push({
-        name: "off",
+        name: "showHttpPrompt",
         args: arguments,
+        promiseResolver: resolve,
       });
       return;
     }
 
     window.OneSignal.push(() => {
-      window.OneSignal.off(event, listener)
+      window.OneSignal.showHttpPrompt(options)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function once(event, listener): void {
+function registerForPushNotifications(options): Promise<void> {
+  return new Promise(function (resolve, reject) {
     if (!doesOneSignalExist()) {
       vueOneSignalFunctionQueue.push({
-        name: "once",
+        name: "registerForPushNotifications",
         args: arguments,
+        promiseResolver: resolve,
       });
       return;
     }
 
     window.OneSignal.push(() => {
-      window.OneSignal.once(event, listener)
+      window.OneSignal.registerForPushNotifications(options)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function isPushNotificationsEnabled(callback): Promise<boolean> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "isPushNotificationsEnabled",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.isPushNotificationsEnabled(callback)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function setDefaultNotificationUrl(url): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "setDefaultNotificationUrl",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.setDefaultNotificationUrl(url)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function showHttpPrompt(options): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "showHttpPrompt",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.showHttpPrompt(options)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function setDefaultTitle(title): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "setDefaultTitle",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.setDefaultTitle(title)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function registerForPushNotifications(options): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "registerForPushNotifications",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.registerForPushNotifications(options)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function getTags(callback): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "getTags",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.getTags(callback)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function setDefaultNotificationUrl(url): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "setDefaultNotificationUrl",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.setDefaultNotificationUrl(url)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function sendTag(key, value, callback): Promise<Object | null> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "sendTag",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.sendTag(key, value, callback)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function setDefaultTitle(title): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "setDefaultTitle",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.setDefaultTitle(title)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function sendTags(tags, callback): Promise<Object | null> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "sendTags",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.sendTags(tags, callback)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function getTags(callback): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "getTags",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.getTags(callback)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function deleteTag(tag): Promise<Array<string>> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "deleteTag",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.deleteTag(tag)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function sendTag(key, value, callback): Promise<Object | null> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "sendTag",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.sendTag(key, value, callback)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function deleteTags(tags, callback): Promise<Array<string>> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "deleteTags",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.deleteTags(tags, callback)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function sendTags(tags, callback): Promise<Object | null> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "sendTags",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.sendTags(tags, callback)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function addListenerForNotificationOpened(callback): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "addListenerForNotificationOpened",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.addListenerForNotificationOpened(callback)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function deleteTag(tag): Promise<Array<string>> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "deleteTag",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.deleteTag(tag)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function setSubscription(newSubscription): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "setSubscription",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.setSubscription(newSubscription)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function deleteTags(tags, callback): Promise<Array<string>> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "deleteTags",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.deleteTags(tags, callback)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function showHttpPermissionRequest(options): Promise<any> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "showHttpPermissionRequest",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.showHttpPermissionRequest(options)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function addListenerForNotificationOpened(callback): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "addListenerForNotificationOpened",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.addListenerForNotificationOpened(callback)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function showNativePrompt(): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "showNativePrompt",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.showNativePrompt()
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function setSubscription(newSubscription): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "setSubscription",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.setSubscription(newSubscription)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function showSlidedownPrompt(options): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "showSlidedownPrompt",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.showSlidedownPrompt(options)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function showHttpPermissionRequest(options): Promise<any> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "showHttpPermissionRequest",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.showHttpPermissionRequest(options)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function showCategorySlidedown(options): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "showCategorySlidedown",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.showCategorySlidedown(options)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function showNativePrompt(): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "showNativePrompt",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.showNativePrompt()
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function showSmsSlidedown(options): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "showSmsSlidedown",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.showSmsSlidedown(options)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function showSlidedownPrompt(options): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "showSlidedownPrompt",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.showSlidedownPrompt(options)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function showEmailSlidedown(options): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "showEmailSlidedown",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.showEmailSlidedown(options)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function showCategorySlidedown(options): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "showCategorySlidedown",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.showCategorySlidedown(options)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function showSmsAndEmailSlidedown(options): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "showSmsAndEmailSlidedown",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.showSmsAndEmailSlidedown(options)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function showSmsSlidedown(options): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "showSmsSlidedown",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.showSmsSlidedown(options)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function getNotificationPermission(onComplete): Promise<NotificationPermission> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "getNotificationPermission",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.getNotificationPermission(onComplete)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function showEmailSlidedown(options): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "showEmailSlidedown",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.showEmailSlidedown(options)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function getUserId(callback): Promise<string | undefined | null> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "getUserId",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.getUserId(callback)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function showSmsAndEmailSlidedown(options): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "showSmsAndEmailSlidedown",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.showSmsAndEmailSlidedown(options)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function getSubscription(callback): Promise<boolean> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "getSubscription",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.getSubscription(callback)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function getNotificationPermission(onComplete): Promise<NotificationPermission> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "getNotificationPermission",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.getNotificationPermission(onComplete)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function setEmail(email, options): Promise<string|null> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "setEmail",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.setEmail(email, options)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function getUserId(callback): Promise<string | undefined | null> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "getUserId",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.getUserId(callback)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function setSMSNumber(smsNumber, options): Promise<string | null> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "setSMSNumber",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.setSMSNumber(smsNumber, options)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function getSubscription(callback): Promise<boolean> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "getSubscription",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.getSubscription(callback)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function logoutEmail(): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "logoutEmail",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.logoutEmail()
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function setEmail(email, options): Promise<string|null> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "setEmail",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.setEmail(email, options)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function logoutSMS(): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "logoutSMS",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.logoutSMS()
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function setSMSNumber(smsNumber, options): Promise<string | null> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "setSMSNumber",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.setSMSNumber(smsNumber, options)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function setExternalUserId(externalUserId, authHash): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "setExternalUserId",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.setExternalUserId(externalUserId, authHash)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function logoutEmail(): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "logoutEmail",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.logoutEmail()
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function removeExternalUserId(): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "removeExternalUserId",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.removeExternalUserId()
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function logoutSMS(): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "logoutSMS",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.logoutSMS()
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function getExternalUserId(): Promise<string | undefined | null> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "getExternalUserId",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.getExternalUserId()
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function setExternalUserId(externalUserId, authHash): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "setExternalUserId",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.setExternalUserId(externalUserId, authHash)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function provideUserConsent(consent): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "provideUserConsent",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.provideUserConsent(consent)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function removeExternalUserId(): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "removeExternalUserId",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.removeExternalUserId()
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function getEmailId(callback): Promise<string | null | undefined> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "getEmailId",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.getEmailId(callback)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function getExternalUserId(): Promise<string | undefined | null> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "getExternalUserId",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.getExternalUserId()
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function getSMSId(callback): Promise<string | null | undefined> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "getSMSId",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.getSMSId(callback)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
+  });
+};
 
-  function provideUserConsent(consent): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "provideUserConsent",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.provideUserConsent(consent)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
+function sendOutcome(outcomeName, outcomeWeight): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    if (!doesOneSignalExist()) {
+      vueOneSignalFunctionQueue.push({
+        name: "sendOutcome",
+        args: arguments,
+        promiseResolver: resolve,
       });
+      return;
+    }
+
+    window.OneSignal.push(() => {
+      window.OneSignal.sendOutcome(outcomeName, outcomeWeight)
+        .then((value) => resolve(value))
+        .catch((error) => reject(error));
     });
-  };
-
-  function getEmailId(callback): Promise<string | null | undefined> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "getEmailId",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.getEmailId(callback)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
-      });
-    });
-  };
-
-  function getSMSId(callback): Promise<string | null | undefined> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "getSMSId",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.getSMSId(callback)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
-      });
-    });
-  };
-
-  function sendOutcome(outcomeName, outcomeWeight): Promise<void> {
-    return new Promise(function (resolve, reject) {
-      if (!doesOneSignalExist()) {
-        vueOneSignalFunctionQueue.push({
-          name: "sendOutcome",
-          args: arguments,
-          promiseResolver: resolve,
-        });
-        return;
-      }
-
-      window.OneSignal.push(() => {
-        window.OneSignal.sendOutcome(outcomeName, outcomeWeight)
-          .then((value) => resolve(value))
-          .catch((error) => reject(error));
-      });
-    });
-  };
+  });
+};
 
 const OneSignalVue: IOneSignal = {
-	init,
-	on,
-	off,
-	once,
-	isPushNotificationsEnabled,
-	showHttpPrompt,
-	registerForPushNotifications,
-	setDefaultNotificationUrl,
-	setDefaultTitle,
-	getTags,
-	sendTag,
-	sendTags,
-	deleteTag,
-	deleteTags,
-	addListenerForNotificationOpened,
-	setSubscription,
-	showHttpPermissionRequest,
-	showNativePrompt,
-	showSlidedownPrompt,
-	showCategorySlidedown,
-	showSmsSlidedown,
-	showEmailSlidedown,
-	showSmsAndEmailSlidedown,
-	getNotificationPermission,
-	getUserId,
-	getSubscription,
-	setEmail,
-	setSMSNumber,
-	logoutEmail,
-	logoutSMS,
-	setExternalUserId,
-	removeExternalUserId,
-	getExternalUserId,
-	provideUserConsent,
-	getEmailId,
-	getSMSId,
-	sendOutcome,
+  init,
+  on,
+  off,
+  once,
+  isPushNotificationsEnabled,
+  showHttpPrompt,
+  registerForPushNotifications,
+  setDefaultNotificationUrl,
+  setDefaultTitle,
+  getTags,
+  sendTag,
+  sendTags,
+  deleteTag,
+  deleteTags,
+  addListenerForNotificationOpened,
+  setSubscription,
+  showHttpPermissionRequest,
+  showNativePrompt,
+  showSlidedownPrompt,
+  showCategorySlidedown,
+  showSmsSlidedown,
+  showEmailSlidedown,
+  showSmsAndEmailSlidedown,
+  getNotificationPermission,
+  getUserId,
+  getSubscription,
+  setEmail,
+  setSMSNumber,
+  logoutEmail,
+  logoutSMS,
+  setExternalUserId,
+  removeExternalUserId,
+  getExternalUserId,
+  provideUserConsent,
+  getEmailId,
+  getSMSId,
+  sendOutcome,
 };
 
 const OneSignalVuePlugin = {
   install(app: typeof VueApp, options: IInitObject) {
     app.config.globalProperties.$OneSignal = OneSignalVue as IOneSignal;
-    app.config.globalProperties.$OneSignal.init(options)
+    app.config.globalProperties.$OneSignal.init(options);
   }
+}
+
+export const useOneSignal = () => {
+  return OneSignalVue;
 }
 
 export default OneSignalVuePlugin;
